@@ -1,6 +1,10 @@
 # A\* vs Dijkstra — análise empírica
 
-Trabalho da disciplina de **Análise de Algoritmos** — Unisinos.
+> Comparação experimental de **Dijkstra** e **A\*** para menor caminho em
+> grids 2D com obstáculos aleatórios. Trabalho da disciplina de **Análise
+> de Algoritmos** — Unisinos.
+
+**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Estrutura](#estrutura-do-repositório)
 
 ## Descrição
 
@@ -9,6 +13,25 @@ Este projeto compara experimentalmente os algoritmos **Dijkstra** (baseline) e
 bidimensionais com obstáculos aleatórios. Os dois algoritmos retornam o
 caminho ótimo; o objetivo é medir o ganho prático do A\* em relação ao
 Dijkstra quando uma heurística admissível está disponível.
+
+## Principais resultados
+
+Resumo dos achados sobre as 540 execuções (detalhes nos gráficos em
+`graphs/` e no relatório em `paper/`):
+
+- **Custos de caminho idênticos** entre Dijkstra e A\* em todas as
+  configurações — ambos retornam o caminho ótimo, como esperado.
+- **A\* visita significativamente menos nós** que o Dijkstra. A vantagem
+  cresce com a densidade de obstáculos: a 10% o A\* visita ~87% dos nós do
+  Dijkstra, a 20% cerca de 62%, e a 30% apenas ~20–39%.
+- **Em cenários grandes e com mais obstáculos, o A\* é claramente mais
+  rápido** — em 200×200 a 30% de obstáculos, o A\* roda em ~25% do tempo do
+  Dijkstra.
+- **Em cenários fáceis (10% de obstáculos), o A\* é ligeiramente mais
+  lento** em tempo de parede (~4–9%): o ganho em nós visitados não
+  compensa o overhead por nó do cálculo da heurística.
+- **A vantagem do A\* escala com o problema**: tanto o tamanho do grid
+  quanto a densidade de obstáculos amplificam o ganho relativo.
 
 ## Algoritmos implementados
 
@@ -48,7 +71,7 @@ Total: 3 × 3 × 30 × 2 algoritmos = **540 execuções**.
 Requer **Python 3.9+**.
 
 ```bash
-git clone <repo>
+git clone https://github.com/Fabexseven/astar-dijkstra-analysis.git
 cd astar-dijkstra-analysis
 
 python -m venv .venv
@@ -81,8 +104,8 @@ A partir da **raiz do projeto**, depois de gerar o CSV:
 python -m src.plots
 ```
 
-Para cada taxa de obstáculo (10/20/30%) são gerados três PNGs em `graphs/`,
-sempre com média ± desvio padrão em função do tamanho do grid:
+Para cada taxa de obstáculo (10/20/30%) são gerados três PNGs em `graphs/`
+(9 no total), sempre com média ± desvio padrão em função do tamanho do grid:
 
 - `path_cost_*.png` — custo do caminho ótimo (coincide entre os dois).
 - `visited_nodes_*.png` — nós expandidos (vantagem do A\*).
