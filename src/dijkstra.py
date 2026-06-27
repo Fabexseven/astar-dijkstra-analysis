@@ -1,6 +1,14 @@
+"""Algoritmo de Dijkstra para menor caminho em grid 2D (usado como baseline)."""
+
 import heapq
 
+
 def dijkstra(grid, start, goal, get_neighbors):
+    """Executa Dijkstra de `start` até `goal` em `grid`.
+
+    Cada aresta tem custo 1 (grid uniforme). Retorna um dicionário com o custo
+    do caminho, o número de nós visitados e se o objetivo foi alcançado.
+    """
     queue = [(0, start)]
     distances = {start: 0}
     visited = set()

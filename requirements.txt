@@ -1,2 +1,4 @@
-pandas
-matplotlib
+# Requisitos do projeto (Python 3.9+).
+# Versões mínimas testadas — qualquer versão mais nova também serve.
+pandas>=2.0
+matplotlib>=3.7

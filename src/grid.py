@@ -1,7 +1,14 @@
+"""Geração do grid 2D com obstáculos aleatórios e função de vizinhança."""
+
 import random
 
 
 def generate_grid(size, obstacle_rate, seed=None):
+    """Gera um grid `size`x`size` com células livres (0) e obstáculos (1).
+
+    A célula de início `(0, 0)` e de objetivo `(size-1, size-1)` são forçadas
+    a ficarem livres. `seed` torna a geração reprodutível.
+    """
     if seed is not None:
         random.seed(seed)
 
@@ -22,6 +29,7 @@ def generate_grid(size, obstacle_rate, seed=None):
 
 
 def get_neighbors(grid, node):
+    """Retorna os vizinhos 4-conectados (cima/baixo/esquerda/direita) livres."""
     size = len(grid)
     x, y = node
 
