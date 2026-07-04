@@ -4,7 +4,7 @@
 > grids 2D com obstáculos aleatórios. Trabalho da disciplina de **Análise
 > de Algoritmos** — Unisinos.
 
-**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Significância](#como-rodar-o-teste-de-significância) · [Artigo em PDF](#como-gerar-o-artigo-em-pdf) · [Estrutura](#estrutura-do-repositório)
+**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Significância](#como-rodar-o-teste-de-significância) · [Artigo em PDF](#como-gerar-o-artigo-em-pdf) · [Melhorias do artigo](#principais-melhorias-do-artigo-revisado) · [Estrutura](#estrutura-do-repositório)
 
 ## Descrição
 
@@ -149,6 +149,44 @@ em modo _headless_ para a conversão HTML → PDF.
 Correspondem, respectivamente, a `paper/paper_v1.md` e
 `paper/paper_revisado.md` — os `.md` versionados aqui são exportações desses
 documentos.
+
+## Principais melhorias do artigo revisado
+
+Mudanças da V1 (`paper/paper_v1.md`) para a versão revisada
+(`paper/paper_revisado.md`), motivadas em grande parte pelos pareceres de
+conformidade em `paper/review-*.md`:
+
+- **Coautoria** — inclusão de Valdomiro Souza, adequando a composição do
+  grupo à exigência da disciplina.
+- **Análise de complexidade** — a Seção 2 passa a apresentar a complexidade
+  de pior caso O((V + E) log V) de ambos os algoritmos com heap binário,
+  situando a vantagem do A\* como de fator constante e de caso médio.
+- **Protocolo de medição de tempo mais robusto** — cada instância passou a
+  ser cronometrada **dez vezes**, reportando-se a **mediana** (a V1 usava uma
+  única medição). A Tabela 1 foi regenerada com os novos tempos.
+- **Teste de significância estatística** — teste de **Wilcoxon de postos
+  sinalizados**, pareado por semente, em cada uma das nove configurações
+  (p < 0,001 em todas), incorporado ao resumo, à Tabela 1 e à discussão. A
+  lentidão do A\* em mapas esparsos deixou de ser uma observação pontual e
+  passou a ser um resultado estatisticamente sustentado (10–15% mais lento).
+- **Contabilização explícita das amostras** — a Seção 3.2 detalha o efeito
+  de percolação: fração solúvel de 100% (10%), 86% (20%) e 47% (30% de
+  obstáculos), justificando a exclusão das 122 execuções sem caminho; a
+  legenda da Tabela 1 passou a indicar médias "sobre as sementes com caminho
+  viável" em vez de "30 sementes".
+- **Referência [2] completada e uso corrigido** — a citação de Ardiansyah
+  et al. ganhou autores, periódico (Bit-Tech), volume, páginas e DOI; e o
+  texto deixou de afirmar que o artigo observa o mesmo fenômeno, passando a
+  **contrastar** grids sintéticos com malhas viárias reais (a topologia do
+  grafo determina se a poda compensa o sobrecusto da heurística).
+- **Referência [3] adicionada** — citação completa de Dijkstra (1959).
+- **Conclusão calibrada** — sem generalizações indevidas: o ganho de uma
+  heurística admissível é certo em expansões, mas o ganho de tempo depende
+  da estrutura do problema; trabalhos futuros ampliados (consumo de memória
+  / tamanho da fronteira, grafos ponderados, vizinhança 8-conectada).
+- **Reprodutibilidade** — o link deste repositório (fork com os dados e
+  scripts atualizados) foi adicionado ao artigo; texto compactado para
+  respeitar o limite de 4 páginas.
 
 ## Estrutura do repositório
 
