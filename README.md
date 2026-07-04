@@ -141,6 +141,15 @@ renderiza o PDF ao lado do `.md`. Requer o pacote `markdown` (já em
 `requirements.txt`) e uma instalação do **Google Chrome** ou **Chromium**, usado
 em modo _headless_ para a conversão HTML → PDF.
 
+### Versões editáveis do artigo (Google Docs)
+
+- **V1 (original):** <https://docs.google.com/document/d/1dzePI1h46R3mK-tsvD_SQ9BCKzldnLkK/edit>
+- **V2 (revisada):** <https://docs.google.com/document/d/130aCZ-BUftNUSjeI1FAoZfQkoh_73VN1ngw9E4e_2_0/edit>
+
+Correspondem, respectivamente, a `paper/paper_v1.md` e
+`paper/paper_revisado.md` — os `.md` versionados aqui são exportações desses
+documentos.
+
 ## Estrutura do repositório
 
 ```
