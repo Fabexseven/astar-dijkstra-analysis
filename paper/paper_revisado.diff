@@ -1,0 +1,145 @@
+# Diff: paper.md (original) -> paper_revisado.md
+#
+# Diff unificado do TEXTO do artigo. As 9 figuras embutidas em base64 foram
+# omitidas para legibilidade; na versao revisada elas foram atualizadas para
+# os graficos regenerados (as curvas de tempo mudaram com a nova metodologia).
+#
+
+--- a/paper.md
++++ b/paper_revisado.md
+@@ -6,13 +6,13 @@
+ 
+ **Resumo**
+ 
+-Este trabalho apresenta uma análise empírica comparativa entre os algoritmos Dijkstra e A∗ (com heurística de Manhattan) para o problema de menor caminho em grids bidimensionais com obstáculos. Conduzimos 540 execuções variando tamanho do mapa (50×50, 100×100, 200×200) e densidade de obstáculos (10%, 20%, 30%), com 30 sementes por configuração. Os resultados confirmam que ambos produzem caminhos de custo idêntico, mas o A∗ expande até cinco vezes menos nós no cenário mais denso. O ganho em tempo é expressivo em mapas grandes e densos (≈4× em 200×200 com 30% de obstáculos), porém marginal ou negativo em mapas esparsos, em que o sobrecusto da heurística não é amortizado.
++Este trabalho apresenta uma análise empírica comparativa entre os algoritmos Dijkstra e A∗ (com heurística de Manhattan) para o problema de menor caminho em grids bidimensionais com obstáculos. Conduzimos 540 execuções variando tamanho do mapa (50×50, 100×100, 200×200) e densidade de obstáculos (10%, 20%, 30%), com 30 sementes por configuração. Os resultados confirmam que ambos produzem caminhos de custo idêntico, mas o A∗ expande até cinco vezes menos nós no cenário mais denso. Um teste de Wilcoxon pareado mostra que todas as diferenças de tempo são estatisticamente significativas (p \< 0,001): o ganho é expressivo em mapas grandes e densos (≈3,8× em 200×200 com 30% de obstáculos), porém pequeno e negativo em mapas esparsos, em que o sobrecusto por nó da heurística não é amortizado.
+ 
+ **1\. Introdução**
+ 
+-O cálculo de menor caminho em grafos é um problema fundamental em ciência da computação, com aplicações em navegação de robôs, videogames e sistemas de roteamento. O algoritmo de Dijkstra (1959) garante a otimalidade da solução em grafos com pesos não negativos por meio de uma busca uniforme a partir da origem, mas expande nós sem qualquer informação sobre a posição do alvo — o que tende a tornar a busca cara em instâncias grandes. Hart, Nilsson e Raphael \[1\] propuseram o A∗ como uma generalização do Dijkstra capaz de incorporar conhecimento de domínio via uma função heurística h(n) que estima o custo remanescente até o objetivo; quando h é admissível, a otimalidade é preservada e o número de nós expandidos tende a diminuir. Trabalhos aplicados recentes \[2\] seguem revisitando essa comparação em cenários reais.
++O cálculo de menor caminho em grafos é um problema fundamental em ciência da computação, com aplicações em navegação de robôs, videogames e sistemas de roteamento. O algoritmo de Dijkstra \[3\] garante a otimalidade da solução em grafos com pesos não negativos por meio de uma busca uniforme a partir da origem, mas expande nós sem qualquer informação sobre a posição do alvo — o que tende a tornar a busca cara em instâncias grandes. Hart, Nilsson e Raphael \[1\] propuseram o A∗ como uma generalização do Dijkstra capaz de incorporar conhecimento de domínio via uma função heurística h(n) que estima o custo remanescente até o objetivo; quando h é admissível, a otimalidade é preservada e o número de nós expandidos tende a diminuir. Trabalhos aplicados recentes \[2\] seguem revisitando essa comparação em cenários reais.
+ 
+-O objetivo deste trabalho é reproduzir empiricamente, em um cenário próprio — grids 2D com obstáculos aleatórios —, o ganho previsto pela formulação de \[1\] e quantificar em que condições o A∗ efetivamente compensa o sobrecusto por nó da heurística. Comparamos as duas estratégias quanto a custo do caminho, número de nós visitados e tempo de execução, variando sistematicamente o tamanho do mapa e a densidade de obstáculos.
++O objetivo deste trabalho é reproduzir empiricamente, em um cenário próprio — grids 2D com obstáculos aleatórios —, o ganho previsto pela formulação de \[1\] e quantificar em que condições o A∗ efetivamente compensa o sobrecusto por nó da heurística. Especificamente, investigamos duas questões: (i) o A∗ com uma heurística admissível preserva a otimalidade do Dijkstra neste cenário? e (ii) sob quais condições de tamanho e densidade a redução no número de nós expandidos se traduz em redução efetiva do tempo de execução? Comparamos as duas estratégias quanto a custo do caminho, número de nós visitados e tempo de execução, variando sistematicamente o tamanho do mapa e a densidade de obstáculos.
+ 
+ **2\. Artigo selecionado e algoritmo estudado**
+ 
+@@ -20,6 +20,8 @@
+ 
+ O A∗ é uma busca em grafo informada por uma função f(n) \= g(n) \+ h(n), em que g(n) é o custo acumulado da origem até n e h(n) é uma estimativa do custo de n até o objetivo. A cada iteração o algoritmo remove da fila de prioridades o nó com menor f e expande seus vizinhos. Hart et al. demonstram que, se h é admissível (h(n) ≤ h∗(n) para todo n), o A∗ retorna um caminho ótimo; quando h é, além disso, consistente, cada nó é expandido no máximo uma vez. O Dijkstra corresponde ao caso h ≡ 0: a busca passa a ser uniforme. Em um grid 4-conectado com custos unitários, a distância de Manhattan h(n) \= |xₙ − xₐ| \+ |yₙ − yₐ| é admissível e consistente — qualquer caminho real entre dois pontos respeita ao menos essa quantidade de passos — sendo portanto a escolha natural para o cenário avaliado.
+ 
++Implementados com fila de prioridade baseada em heap binário, ambos os algoritmos têm complexidade de pior caso O((V \+ E) log V), onde V e E são os números de vértices e arestas; em um grid n × n 4-conectado, V \= n² e E \= O(n²). O A∗ compartilha esse limite assintótico com o Dijkstra — a vantagem é de fator constante e de caso médio, ao reduzir o número de vértices efetivamente expandidos por meio da poda guiada pela heurística. É exatamente essa redução, e sua conversão (ou não) em tempo, que este trabalho quantifica empiricamente.
++
+ **3\. Implementação e metodologia experimental**
+ 
+ **3.1 Implementação**
+@@ -28,43 +30,43 @@
+ 
+ **3.2 Cenário experimental e métricas**
+ 
+-Os experimentos cobrem o produto cartesiano de três tamanhos (50×50, 100×100, 200×200) e três densidades de obstáculos (10%, 20%, 30%). Cada uma das nove configurações foi executada com 30 sementes (0 a 29), totalizando 540 execuções considerando os dois algoritmos. As sementes garantem reprodutibilidade e fazem com que Dijkstra e A∗ sejam avaliados sobre os mesmos mapas. Em configurações densas é possível que o sorteio produza grids sem caminho viável; tais execuções (122 das 540, predominantemente no cenário 200×200 com 30%) foram excluídas das estatísticas, uma vez que correspondem à varredura quase total do espaço livre.
++Os experimentos cobrem o produto cartesiano de três tamanhos (50×50, 100×100, 200×200) e três densidades de obstáculos (10%, 20%, 30%). Cada uma das nove configurações foi executada com 30 sementes (0 a 29), totalizando 540 execuções considerando os dois algoritmos. As sementes garantem reprodutibilidade e fazem com que Dijkstra e A∗ sejam avaliados sobre os mesmos mapas. Como os obstáculos são sorteados de forma independente, densidades altas podem produzir grids sem caminho viável entre origem e destino — um efeito de percolação: a fração de instâncias solúveis cai de 100% (90/90) a 10% de obstáculos para 86% (77/90) a 20% e apenas 47% (42/90) a 30%, sem concentração em um tamanho específico. As 122 execuções sem caminho (61 mapas × 2 algoritmos) foram excluídas das estatísticas de desempenho: nesses casos ambos os algoritmos varrem exaustivamente toda a componente livre acessível e o A∗ não tem qualquer vantagem, pois a poda heurística só atua quando existe um objetivo alcançável.
+ 
+-Foram registradas três métricas: (i) custo do caminho em número de passos, que serve simultaneamente como qualidade da solução e verificação de sanidade; (ii) número de nós visitados, definido como a cardinalidade do conjunto de nós removidos da fila de prioridade; (iii) tempo de execução medido com time.perf\_counter, em milissegundos. Para cada configuração reportamos média e desvio padrão sobre as 30 sementes.
++Foram registradas três métricas: (i) custo do caminho em número de passos, que serve simultaneamente como qualidade da solução e verificação de sanidade; (ii) número de nós visitados, definido como a cardinalidade do conjunto de nós removidos da fila de prioridade — uma medida determinística, independente da máquina; (iii) tempo de execução, medido com time.perf\_counter em milissegundos. Como uma única cronometragem é sensível a ruído de escalonamento do sistema operacional e a aquecimento de cache/interpretador, cada instância foi executada dez vezes e reportamos a mediana dos tempos; todas as medições foram feitas em um único host, em Python 3. Para cada configuração reportamos média e desvio padrão sobre as sementes com caminho viável.
+ 
+ **4\. Resultados**
+ 
+ A Tabela 1 sintetiza os valores médios obtidos para as três métricas, e as Figuras 1 a 3 mostram graficamente o comportamento em função do tamanho do mapa, para cada densidade de obstáculos.
+ 
+-| Tamanho | Obst. | Nós visitados (méd.) |  | Tempo ms (méd.) |  | Razão A∗/Dij |
+-| :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+-|  |  | **Dijkstra** | **A∗** | **Dijkstra** | **A∗** | **(tempo)** |
+-| 50 | 10% | 2.254 | 1.971 | 3.08 | 3.34 | 1.08× |
+-| 50 | 20% | 2.000 | 1.277 | 2.68 | 2.17 | 0.81× |
+-| 50 | 30% | 1.706 | 668 | 2.30 | 1.08 | 0.47× |
+-| 100 | 10% | 8.998 | 7.792 | 13.75 | 14.28 | 1.04× |
+-| 100 | 20% | 7.978 | 4.940 | 11.88 | 9.15 | 0.77× |
+-| 100 | 30% | 6.822 | 1.941 | 9.84 | 3.38 | 0.34× |
+-| 200 | 10% | 35.986 | 31.193 | 58.71 | 63.89 | 1.09× |
+-| 200 | 20% | 31.909 | 19.484 | 50.21 | 39.07 | 0.78× |
+-| 200 | 30% | 27.417 | 5.479 | 42.17 | 10.41 | 0.25× |
++| Tamanho | Obst. | Nós visitados (méd.) |        | Tempo ms (méd.) |        | Razão A∗/Dij |
++| :------ | :---- | :------------------- | :----- | :-------------- | :----- | :----------- |
++|         |       | **Dijkstra**         | **A∗** | **Dijkstra**    | **A∗** | **(tempo)**  |
++| 50      | 10%   | 2.254                | 1.971  | 2,23            | 2,46   | 1,11×        |
++| 50      | 20%   | 2.000                | 1.277  | 1,93            | 1,59   | 0,83×        |
++| 50      | 30%   | 1.706                | 668    | 1,60            | 0,79   | 0,50×        |
++| 100     | 10%   | 8.998                | 7.792  | 9,47            | 10,40  | 1,10×        |
++| 100     | 20%   | 7.978                | 4.940  | 8,27            | 6,77   | 0,82×        |
++| 100     | 30%   | 6.822                | 1.941  | 6,95            | 2,48   | 0,36×        |
++| 200     | 10%   | 35.986               | 31.193 | 41,18           | 47,42  | 1,15×        |
++| 200     | 20%   | 31.909               | 19.484 | 35,86           | 30,51  | 0,85×        |
++| 200     | 30%   | 27.417               | 5.479  | 30,52           | 8,10   | 0,27×        |
+ 
+-*Tabela 1\. Resultados médios por configuração (30 sementes). Custos de caminho omitidos por serem idênticos entre os dois algoritmos. Razões \< 1 indicam vantagem do A∗.*
++_Tabela 1\. Resultados médios por configuração (médias sobre as sementes com caminho viável). Custos de caminho omitidos por serem idênticos entre os dois algoritmos. Razões \< 1 indicam vantagem do A∗; todas as diferenças de tempo são estatisticamente significativas (Wilcoxon pareado, p \< 0,001)._
+ 
+ | ![][image1] | ![][image2] | ![][image3] |
+-| :---: | :---: | :---: |
++| :---------: | :---------: | :---------: |
+ 
+-*Figura 1\. Nós visitados em função do tamanho do mapa para densidades de 10%, 20% e 30% de obstáculos (média ± desvio padrão sobre 30 sementes).*
++_Figura 1\. Nós visitados em função do tamanho do mapa para densidades de 10%, 20% e 30% de obstáculos (média ± desvio padrão sobre 30 sementes)._
+ 
+ | ![][image4] | ![][image5] | ![][image6] |
+-| :---: | :---: | :---: |
++| :---------: | :---------: | :---------: |
+ 
+-*Figura 2\. Tempo de execução (ms) em função do tamanho do mapa para densidades de 10%, 20% e 30% de obstáculos.*
++_Figura 2\. Tempo de execução (ms) em função do tamanho do mapa para densidades de 10%, 20% e 30% de obstáculos._
+ 
+ | ![][image7] | ![][image8] | ![][image9] |
+-| :---: | :---: | :---: |
++| :---------: | :---------: | :---------: |
+ 
+-*Figura 3\. Custo do caminho encontrado em função do tamanho do mapa. Os pontos de Dijkstra e A∗ se sobrepõem em todas as configurações.*
++_Figura 3\. Custo do caminho encontrado em função do tamanho do mapa. Os pontos de Dijkstra e A∗ se sobrepõem em todas as configurações._
+ 
+ **4.1 Custo do caminho**
+ 
+@@ -76,7 +78,7 @@
+ 
+ **4.3 Tempo de execução**
+ 
+-O tempo de execução acompanha qualitativamente a curva de nós visitados, porém com inclinação menos pronunciada (Figura 2). Em 200×200 com 30% de obstáculos o A∗ leva em média 10,4 ms contra 42,2 ms do Dijkstra — uma aceleração de aproximadamente quatro vezes. Já em cenários com 10% de obstáculos o A∗ apresenta tempo médio ligeiramente superior ao do Dijkstra (entre 4% e 9%), apesar de visitar menos nós. Esse comportamento é discutido em detalhe na próxima seção.
++O tempo de execução acompanha qualitativamente a curva de nós visitados, porém com inclinação menos pronunciada (Figura 2). Em 200×200 com 30% de obstáculos o A∗ leva em média 8,1 ms contra 30,5 ms do Dijkstra — uma aceleração de aproximadamente 3,8 vezes. Já em cenários com 10% de obstáculos o A∗ apresenta tempo médio ligeiramente superior ao do Dijkstra (entre 10% e 15%), apesar de visitar menos nós. Esse comportamento é discutido em detalhe na próxima seção.
+ 
+ **5\. Discussão e limitações**
+ 
+@@ -84,15 +86,15 @@
+ 
+ **5.1 Por que A∗ nem sempre é mais rápido**
+ 
+-Embora o A∗ expanda menos nós em todas as configurações, sua vantagem em tempo só se materializa a partir de 20% de obstáculos. Cada expansão envolve cálculo da heurística, somas adicionais e chave de prioridade maior — cada nó custa mais ciclos do que no Dijkstra. Quando o ganho em poda é pequeno (grids esparsos, em que a Manhattan é quase exata e descarta poucos vizinhos), esse sobrecusto por nó não é amortizado e o tempo total pode ultrapassar o do baseline. O efeito é visível em 200×200 com 10%: uma redução de \~13% no número de nós visitados se converte em execução \~9% mais lenta. Ardiansyah et al. \[2\] reportam comportamento semelhante em malhas viárias — vantagens em expansões nem sempre se traduzem proporcionalmente em tempo.
++Embora o A∗ expanda menos nós em todas as configurações, sua vantagem em tempo só se materializa a partir de 20% de obstáculos. Cada expansão envolve cálculo da heurística, somas adicionais e chave de prioridade maior — cada nó custa mais ciclos do que no Dijkstra. Quando o ganho em poda é pequeno (grids esparsos, em que a Manhattan é quase exata e descarta poucos vizinhos), esse sobrecusto por nó não é amortizado e o tempo total ultrapassa o do baseline. O efeito é visível em 200×200 com 10%: uma redução de \~13% no número de nós visitados se converte em execução \~15% mais lenta. Para descartar que essa desvantagem fosse mero ruído de medição, cada instância foi cronometrada dez vezes (registrando-se a mediana) e os dois algoritmos foram comparados com um teste de Wilcoxon de postos sinalizados, pareado pela semente. Em todas as nove configurações a diferença de tempo é estatisticamente significativa (p \< 0,001): o A∗ é significativamente mais lento nas três configurações com 10% de obstáculos e significativamente mais rápido nas seis com 20% e 30%. A desvantagem em cenários esparsos é, portanto, um efeito real e reprodutível, não artefato de variância. Ardiansyah et al. \[2\] reportam comportamento semelhante em malhas viárias — vantagens em expansões nem sempre se traduzem proporcionalmente em tempo.
+ 
+-**5.2 Limitações**
++**5.2 Limitações e trabalhos futuros**
+ 
+-Os experimentos consideram custo de aresta unitário e vizinhança 4-conectada; pesos heterogêneos ou movimentos diagonais exigiriam outra heurística (octile, euclidiana) e alterariam o trade-off. Os obstáculos são amostrados independentemente, produzindo padrões mais ruidosos do que mapas reais — resultados em malhas viárias \[2\] podem diferir em magnitude. A implementação em Python puro adiciona overhead de interpretador, mas não muda o ranking entre os algoritmos. Não avaliamos consumo de memória.
++Os experimentos consideram custo de aresta unitário e vizinhança 4-conectada; pesos heterogêneos (terreno com custos variáveis) ou movimentos diagonais exigiriam outra heurística — respectivamente uma heurística ponderada ou a distância octile/euclidiana — e alterariam o trade-off entre poda e sobrecusto por nó. Estender o estudo a esses cenários é a direção natural de adaptação do método a problemas de otimização mais próximos de aplicações reais. Os obstáculos são amostrados de forma independente, produzindo padrões mais ruidosos do que mapas reais — resultados em malhas viárias \[2\] podem diferir em magnitude. Não avaliamos consumo de memória, embora o tamanho máximo da fronteira (fila de prioridade) seja um eixo em que A∗ e Dijkstra também divergem e mereça medição futura. Por fim, os tempos absolutos dependem da máquina e do overhead do interpretador Python; por isso as conclusões se apoiam nas razões entre algoritmos e no número de nós expandidos, ambos robustos a esses fatores.
+ 
+ **6\. Conclusão**
+ 
+-Reproduzimos empiricamente o resultado central de Hart, Nilsson e Raphael \[1\]: para menor caminho em grids 2D, o A∗ com heurística de Manhattan preserva a otimalidade do Dijkstra e expande sistematicamente menos nós, com vantagem crescente com a densidade — até cinco vezes menos expansões no cenário mais denso. A tradução desse ganho em tempo, contudo, depende de o sobrecusto por nó da heurística ser amortizado pela poda: em mapas grandes mas esparsos o A∗ pode ser marginalmente mais lento. O experimento ilustra uma lição prática complementar à formulação teórica de \[1\]: o benefício de uma heurística admissível existe sempre em expansões, mas o ganho de tempo só se concretiza quando a estrutura do problema favorece a poda. Em aplicações com mapas densos e de larga escala, o A∗ mostra-se claramente preferível.
++Reproduzimos empiricamente o resultado central de Hart, Nilsson e Raphael \[1\]: para menor caminho em grids 2D, o A∗ com heurística de Manhattan preserva a otimalidade do Dijkstra e expande sistematicamente menos nós, com vantagem crescente com a densidade — até cinco vezes menos expansões no cenário mais denso. A tradução desse ganho em tempo, contudo, depende de o sobrecusto por nó da heurística ser amortizado pela poda: em mapas grandes mas esparsos o A∗ é significativamente, ainda que modestamente, mais lento (10–15%); a partir de 20% de obstáculos passa a ser significativamente mais rápido, chegando a ≈3,8× em 200×200 com 30%. O experimento ilustra uma lição prática complementar à formulação teórica de \[1\]: o benefício de uma heurística admissível existe sempre em expansões, mas o ganho de tempo só se concretiza quando a estrutura do problema favorece a poda. Em aplicações com mapas densos e de larga escala, o A∗ mostra-se claramente preferível; estendê-lo a grafos ponderados e vizinhanças mais ricas é o próximo passo para aproximá-lo de cenários reais de otimização.
+ 
+ **Referências**
+ 
+@@ -100,13 +102,7 @@
+ 
+ \[2\] ARDIANSYAH et al. Comparative analysis of Dijkstra and A∗ algorithms for determining the shortest route, 2025\.
+ 
+-Código-fonte e dados para reprodução disponíveis em: https://github.com/Fabexseven/astar-dijkstra-analysis
++\[3\] DIJKSTRA, E. W. A note on two problems in connexion with graphs. Numerische Mathematik, v. 1, p. 269–271, 1959\.
+ 
+-
+-
+-
+-
+-
+-
+-
++Código-fonte e dados para reprodução disponíveis em: https://github.com/valdomirosouza/astar-dijkstra-analysis
+ 
