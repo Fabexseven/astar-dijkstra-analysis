@@ -1,6 +1,6 @@
 **Análise empírica de A∗ versus Dijkstra para menor caminho em grids 2D com obstáculos**
 
-Fábio Krein  
+Fábio Krein · Valdomiro Souza  
 Programa de Pós-Graduação em Computação Aplicada — Unisinos  
 Disciplina: Análise de Algoritmos
 
