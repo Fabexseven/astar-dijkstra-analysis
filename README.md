@@ -4,6 +4,10 @@
 > grids 2D com obstáculos aleatórios. Trabalho da disciplina de **Análise
 > de Algoritmos** — Unisinos.
 
+> [!NOTE]
+> Este projeto é um _fork_ de
+> [Fabexseven/astar-dijkstra-analysis](https://github.com/Fabexseven/astar-dijkstra-analysis).
+
 **Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Estrutura](#estrutura-do-repositório)
 
 ## Descrição
