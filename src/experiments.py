@@ -15,6 +15,7 @@ import csv
 import sys
 import time
 from pathlib import Path
+from statistics import median
 
 # Permite `python src/experiments.py` (sem o `-m`) — adiciona `src/` ao path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -29,14 +30,32 @@ from astar import astar
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RESULTS_PATH = PROJECT_ROOT / "results" / "results.csv"
 
+# Número de medições de tempo por instância. Uma única cronometragem em Python
+# é ruidosa (escalonamento do SO, aquecimento de cache/interpretador) nas escalas
+# de poucos milissegundos deste estudo; medir várias vezes e tomar a mediana
+# torna a comparação de tempo entre os algoritmos robusta a esses artefatos.
+TIMING_REPETITIONS = 10
 
-def measure(algorithm, grid, start, goal):
-    """Executa `algorithm` cronometrando o tempo total em milissegundos."""
-    start_time = time.perf_counter()
-    result = algorithm(grid, start, goal, get_neighbors)
-    end_time = time.perf_counter()
 
-    result["runtime_ms"] = (end_time - start_time) * 1000
+def measure(algorithm, grid, start, goal, repetitions=TIMING_REPETITIONS):
+    """Executa `algorithm` `repetitions` vezes e devolve seu resultado com a
+    mediana dos tempos (ms) em `runtime_ms`.
+
+    `path_cost` e `visited_nodes` são determinísticos por semente, portanto o
+    resultado é idêntico a cada repetição; só o tempo varia. A mediana é
+    preferida à média por descartar naturalmente medições atípicas (ex.: a
+    primeira execução, ainda "fria").
+    """
+    timings = []
+    result = None
+
+    for _ in range(repetitions):
+        start_time = time.perf_counter()
+        result = algorithm(grid, start, goal, get_neighbors)
+        end_time = time.perf_counter()
+        timings.append((end_time - start_time) * 1000)
+
+    result["runtime_ms"] = median(timings)
     return result
 
 
@@ -50,6 +69,10 @@ def run_experiments():
 
     for size in sizes:
         for obstacle_rate in obstacle_rates:
+            print(
+                f"Rodando {size}x{size} @ {int(obstacle_rate * 100)}% de obstáculos "
+                f"({repetitions} sementes x {TIMING_REPETITIONS} medições)..."
+            )
             for seed in range(repetitions):
                 grid, start, goal = generate_grid(size, obstacle_rate, seed)
 

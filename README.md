@@ -47,13 +47,13 @@ Ambos foram implementados do zero, sem usar bibliotecas externas de grafos.
 
 ## Cenário experimental
 
-| Parâmetro                 | Valores                                   |
-| ------------------------- | ----------------------------------------- |
-| Tamanhos do grid          | 50 × 50, 100 × 100, 200 × 200             |
-| Densidades de obstáculos  | 10%, 20%, 30%                             |
-| Repetições por cenário    | 30 (seeds `0..29`)                        |
-| Conectividade             | 4 vizinhos (cima, baixo, esquerda, direita) |
-| Início / objetivo         | `(0, 0)` → `(n-1, n-1)`                   |
+| Parâmetro                | Valores                                     |
+| ------------------------ | ------------------------------------------- |
+| Tamanhos do grid         | 50 × 50, 100 × 100, 200 × 200               |
+| Densidades de obstáculos | 10%, 20%, 30%                               |
+| Repetições por cenário   | 30 (seeds `0..29`)                          |
+| Conectividade            | 4 vizinhos (cima, baixo, esquerda, direita) |
+| Início / objetivo        | `(0, 0)` → `(n-1, n-1)`                     |
 
 Total: 3 × 3 × 30 × 2 algoritmos = **540 execuções**.
 
@@ -111,6 +111,20 @@ Para cada taxa de obstáculo (10/20/30%) são gerados três PNGs em `graphs/`
 - `visited_nodes_*.png` — nós expandidos (vantagem do A\*).
 - `runtime_*.png` — tempo de execução.
 
+## Como gerar o relatório em PDF
+
+A partir da **raiz do projeto**, depois de (re)gerar os gráficos:
+
+```bash
+python docs/build_pdf.py
+```
+
+O script reembute as nove figuras de `graphs/` no relatório em Markdown
+(`docs/*.md`) — mantendo-o autocontido e coerente com os dados — e renderiza o
+PDF ao lado do `.md`. Requer o pacote `markdown` (já em `requirements.txt`) e
+uma instalação do **Google Chrome** ou **Chromium**, usado em modo _headless_
+para a conversão HTML → PDF.
+
 ## Estrutura do repositório
 
 ```
@@ -123,12 +137,17 @@ astar-dijkstra-analysis/
 │   ├── dijkstra.py         # Dijkstra (baseline)
 │   ├── astar.py            # A* com heurística de Manhattan
 │   ├── experiments.py      # bateria de experimentos → results/results.csv
-│   └── plots.py            # gera os PNGs de graphs/ a partir do CSV
+│   ├── plots.py            # gera os PNGs de graphs/ a partir do CSV
+│   └── significance.py     # teste de Wilcoxon pareado → results/significance.csv
 ├── results/
-│   └── results.csv         # saída bruta dos experimentos (1 linha por run)
+│   ├── results.csv         # saída bruta dos experimentos (1 linha por run)
+│   └── significance.csv    # significância dos tempos (A* vs Dijkstra) por cenário
 ├── graphs/                 # gráficos comparativos (PNG, 300 dpi)
 │   ├── path_cost_{10,20,30}.png
 │   ├── visited_nodes_{10,20,30}.png
 │   └── runtime_{10,20,30}.png
-└── paper/                  # relatório do trabalho
+└── docs/                   # relatório do trabalho
+    ├── *.md                # relatório em Markdown (figuras embutidas em base64)
+    ├── *.pdf               # relatório renderizado (gerado por build_pdf.py)
+    └── build_pdf.py        # Markdown → PDF (via Chrome headless)
 ```

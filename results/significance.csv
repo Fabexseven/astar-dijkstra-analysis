@@ -1,0 +1,10 @@
+size,obstacle_rate,n,dijkstra_median_ms,astar_median_ms,median_diff_ms,ratio_astar_dij,wilcoxon_stat,wilcoxon_p,ttest_p,significant,verdict
+50,0.1,30,2.225,2.497,0.27,1.106,3.0,9.313225746154785e-09,4.456622755993969e-11,True,A* significativamente mais lento
+50,0.2,28,1.933,1.651,-0.29,0.826,0.0,7.450580596923828e-09,2.46365656824502e-10,True,A* significativamente mais rápido
+50,0.3,17,1.609,0.764,-0.878,0.496,0.0,1.52587890625e-05,3.2690455713338984e-10,True,A* significativamente mais rápido
+100,0.1,30,9.466,10.405,0.904,1.097,3.0,9.313225746154785e-09,2.131203861325091e-11,True,A* significativamente mais lento
+100,0.2,25,8.276,6.98,-1.343,0.818,0.0,5.960464477539063e-08,3.0794045669107913e-09,True,A* significativamente mais rápido
+100,0.3,13,6.93,2.453,-4.46,0.357,0.0,0.000244140625,6.112465928331919e-10,True,A* significativamente mais rápido
+200,0.1,30,41.086,47.628,6.217,1.152,0.0,1.862645149230957e-09,3.729117905176561e-21,True,A* significativamente mais lento
+200,0.2,24,35.863,31.164,-4.609,0.851,3.0,5.960464477539062e-07,2.560684444917406e-07,True,A* significativamente mais rápido
+200,0.3,12,30.547,6.775,-23.6,0.265,0.0,0.00048828125,1.0416071901444185e-09,True,A* significativamente mais rápido

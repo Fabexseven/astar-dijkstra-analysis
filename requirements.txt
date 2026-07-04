@@ -2,3 +2,7 @@
 # Versões mínimas testadas — qualquer versão mais nova também serve.
 pandas>=2.0
 matplotlib>=3.7
+scipy>=1.10
+# Apenas para gerar o PDF do relatório (docs/build_pdf.py); requer também
+# uma instalação do Google Chrome/Chromium para a renderização.
+markdown>=3.4
