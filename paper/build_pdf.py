@@ -1,4 +1,4 @@
-"""Gera o PDF do relatório a partir do Markdown em `docs/`.
+"""Gera o PDF do artigo a partir do Markdown em `paper/`.
 
 Pipeline: reembute as 9 figuras (base64) a partir dos PNGs atuais em `graphs/`,
 converte o Markdown em HTML pronto para impressão e renderiza o PDF com o
@@ -9,9 +9,9 @@ Requer `markdown` (ver requirements.txt) e uma instalação do Google Chrome ou
 Chromium. Rode a partir da raiz do projeto (ou de qualquer lugar — os caminhos
 são resolvidos em relação a este arquivo):
 
-    python docs/build_pdf.py
+    python paper/build_pdf.py
 
-Gera, ao lado deste script, `docs/<mesmo nome do .md>.pdf`.
+Gera, ao lado deste script, `paper/paper_revisado.pdf`.
 """
 
 import base64
@@ -22,12 +22,10 @@ import sys
 from pathlib import Path
 
 
-DOCS_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = DOCS_DIR.parent
+PAPER_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = PAPER_DIR.parent
 GRAPHS_DIR = PROJECT_ROOT / "graphs"
-REPORT_MD = DOCS_DIR / (
-    "Análise empírica versus Dijkstra para menor caminho em grids 2D com obstáculos.md"
-)
+REPORT_MD = PAPER_DIR / "paper_revisado.md"
 
 # Ordem das figuras no relatório: Fig.1 nós visitados, Fig.2 tempo, Fig.3 custo,
 # cada uma com as colunas 10% / 20% / 30%.
@@ -94,7 +92,7 @@ def find_chrome():
             return resolved
     sys.exit(
         "Chrome/Chromium não encontrado. Instale o Google Chrome ou ajuste "
-        "CHROME_CANDIDATES em docs/build_pdf.py."
+        "CHROME_CANDIDATES em paper/build_pdf.py."
     )
 
 
@@ -111,7 +109,7 @@ def main():
     body = markdown.markdown(text, extensions=["tables", "attr_list", "md_in_html"])
     html = HTML_TEMPLATE.format(css=CSS, body=body)
 
-    html_path = DOCS_DIR / "_report.html"
+    html_path = PAPER_DIR / "_report.html"
     pdf_path = REPORT_MD.with_suffix(".pdf")
     html_path.write_text(html, encoding="utf-8")
 

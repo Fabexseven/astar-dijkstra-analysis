@@ -111,19 +111,19 @@ Para cada taxa de obstáculo (10/20/30%) são gerados três PNGs em `graphs/`
 - `visited_nodes_*.png` — nós expandidos (vantagem do A\*).
 - `runtime_*.png` — tempo de execução.
 
-## Como gerar o relatório em PDF
+## Como gerar o artigo em PDF
 
 A partir da **raiz do projeto**, depois de (re)gerar os gráficos:
 
 ```bash
-python docs/build_pdf.py
+python paper/build_pdf.py
 ```
 
-O script reembute as nove figuras de `graphs/` no relatório em Markdown
-(`docs/*.md`) — mantendo-o autocontido e coerente com os dados — e renderiza o
-PDF ao lado do `.md`. Requer o pacote `markdown` (já em `requirements.txt`) e
-uma instalação do **Google Chrome** ou **Chromium**, usado em modo _headless_
-para a conversão HTML → PDF.
+O script reembute as nove figuras de `graphs/` no artigo em Markdown
+(`paper/paper_revisado.md`) — mantendo-o autocontido e coerente com os dados — e
+renderiza o PDF ao lado do `.md`. Requer o pacote `markdown` (já em
+`requirements.txt`) e uma instalação do **Google Chrome** ou **Chromium**, usado
+em modo _headless_ para a conversão HTML → PDF.
 
 ## Estrutura do repositório
 
@@ -146,8 +146,10 @@ astar-dijkstra-analysis/
 │   ├── path_cost_{10,20,30}.png
 │   ├── visited_nodes_{10,20,30}.png
 │   └── runtime_{10,20,30}.png
-└── docs/                   # relatório do trabalho
-    ├── *.md                # relatório em Markdown (figuras embutidas em base64)
-    ├── *.pdf               # relatório renderizado (gerado por build_pdf.py)
-    └── build_pdf.py        # Markdown → PDF (via Chrome headless)
+├── paper/                  # o artigo (short-paper)
+│   ├── paper_revisado.md   # artigo em Markdown (figuras embutidas em base64)
+│   ├── paper_revisado.pdf  # artigo renderizado (gerado por build_pdf.py)
+│   ├── paper_revisado.diff # diff do texto vs. o rascunho original
+│   └── build_pdf.py        # Markdown → PDF (via Chrome headless)
+└── docs/                   # material de referência (enunciado + artigos citados)
 ```
