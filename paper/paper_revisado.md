@@ -84,7 +84,7 @@ A equivalência de custos confirma a otimalidade de \[1\]: Dijkstra é o caso h 
 
 **5.1 Por que A∗ nem sempre é mais rápido**
 
-Embora o A∗ expanda menos nós em toda configuração, sua vantagem em tempo só surge a partir de 20% de obstáculos. Cada expansão custa mais ciclos (cálculo de h, somas, chave maior); quando a poda é pequena (grids esparsos, em que a Manhattan é quase exata), esse sobrecusto por nó não é amortizado e o tempo total supera o do baseline — em 200×200 a 10%, uma redução de \~13% em nós vira execução \~15% mais lenta. Para descartar ruído de medição, cronometramos cada instância dez vezes (mediana) e comparamos os algoritmos com um teste de Wilcoxon de postos sinalizados, pareado por semente: em todas as nove configurações a diferença é significativa (p \< 0,001) — o A∗ é mais lento nas três com 10% e mais rápido nas seis com 20% e 30%. A desvantagem em cenários esparsos é, portanto, real e reprodutível. Ardiansyah et al. \[2\] observam o mesmo em malhas viárias: ganho em expansões nem sempre se traduz em tempo.
+Embora o A∗ expanda menos nós em toda configuração, sua vantagem em tempo só surge a partir de 20% de obstáculos. Cada expansão custa mais ciclos (cálculo de h, somas, chave maior); quando a poda é pequena (grids esparsos, em que a Manhattan é quase exata), esse sobrecusto por nó não é amortizado e o tempo total supera o do baseline — em 200×200 a 10%, uma redução de \~13% em nós vira execução \~15% mais lenta. Para descartar ruído de medição, cronometramos cada instância dez vezes (mediana) e comparamos os algoritmos com um teste de Wilcoxon de postos sinalizados, pareado por semente: em todas as nove configurações a diferença é significativa (p \< 0,001) — o A∗ é mais lento nas três com 10% e mais rápido nas seis com 20% e 30%. A desvantagem em cenários esparsos é, portanto, real e reprodutível neste modelo de grid. Esse comportamento contrasta com aplicações em malhas viárias reais, como as investigadas por Ardiansyah et al. \[2\]. Nesses ambientes, a redução do espaço de busca proporcionada pelo A∗ mostra-se consistentemente superior ao sobrecusto computacional da heurística, ilustrando que a topologia específica do grafo dita se a poda compensa ou não o overhead.
 
 **5.2 Limitações e trabalhos futuros**
 
@@ -98,7 +98,7 @@ Reproduzimos o resultado central de Hart, Nilsson e Raphael \[1\]: em grids 2D, 
 
 \[1\] HART, P. E.; NILSSON, N. J.; RAPHAEL, B. A formal basis for the heuristic determination of minimum cost paths. IEEE Transactions on Systems Science and Cybernetics, v. 4, n. 2, p. 100–107, 1968\.
 
-\[2\] ARDIANSYAH et al. Comparative analysis of Dijkstra and A∗ algorithms for determining the shortest route, 2025\.
+\[2\] ARDIANSYAH, A.; NASUTION, A. M.; IQBAL, M. Comparative analysis of Dijkstra and A* algorithms for determining the shortest route. Bit-Tech, v. 8, n. 2, p. 2974-2983, 2025. DOI: 10.32877/bt.v8i2.3474.
 
 \[3\] DIJKSTRA, E. W. A note on two problems in connexion with graphs. Numerische Mathematik, v. 1, p. 269–271, 1959\.
 
