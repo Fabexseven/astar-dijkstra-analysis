@@ -9,9 +9,18 @@ Requer `markdown` (ver requirements.txt) e uma instalação do Google Chrome ou
 Chromium. Rode a partir da raiz do projeto (ou de qualquer lugar — os caminhos
 são resolvidos em relação a este arquivo):
 
-    python paper/build_pdf.py
+    python paper/build_pdf.py                # gera paper/paper_revisado.pdf
+    python paper/build_pdf.py paper_v1.md    # gera paper/paper_v1.pdf
 
-Gera, ao lado deste script, `paper/paper_revisado.pdf`.
+O reembutimento das figuras só é feito para o `paper_revisado.md`: os PNGs de
+`graphs/` refletem os dados atuais, que correspondem à versão revisada. O
+`paper_v1.md` é um registro histórico — suas figuras embutidas (da bateria de
+medição original) são preservadas, apenas renderizadas em PDF.
+
+Atenção: a exportação do Google Docs reduziu as figuras do `paper_v1.md` a
+miniaturas (~170×128 px); um PDF gerado a partir dele sai com figuras de baixa
+resolução. O `paper_v1.pdf` versionado é a exportação em resolução plena do
+próprio Google Docs — prefira mantê-lo a regenerá-lo por este script.
 """
 
 import base64
@@ -25,7 +34,7 @@ from pathlib import Path
 PAPER_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = PAPER_DIR.parent
 GRAPHS_DIR = PROJECT_ROOT / "graphs"
-REPORT_MD = PAPER_DIR / "paper_revisado.md"
+DEFAULT_MD = "paper_revisado.md"
 
 # Ordem das figuras no relatório: Fig.1 nós visitados, Fig.2 tempo, Fig.3 custo,
 # cada uma com as colunas 10% / 20% / 30%.
@@ -102,15 +111,22 @@ def main():
     except ImportError:
         sys.exit("Módulo 'markdown' ausente. Rode: pip install -r requirements.txt")
 
-    text = REPORT_MD.read_text(encoding="utf-8")
-    text = refresh_images(text)
-    REPORT_MD.write_text(text, encoding="utf-8")  # mantém o .md autocontido
+    report_md = PAPER_DIR / (sys.argv[1] if len(sys.argv) > 1 else DEFAULT_MD)
+    if not report_md.exists():
+        sys.exit(f"Arquivo não encontrado: {report_md}")
+
+    text = report_md.read_text(encoding="utf-8")
+    # Só a versão revisada acompanha os dados atuais de graphs/; o paper_v1 é
+    # um registro histórico e mantém as figuras da bateria de medição original.
+    if report_md.name == DEFAULT_MD:
+        text = refresh_images(text)
+        report_md.write_text(text, encoding="utf-8")  # mantém o .md autocontido
 
     body = markdown.markdown(text, extensions=["tables", "attr_list", "md_in_html"])
     html = HTML_TEMPLATE.format(css=CSS, body=body)
 
     html_path = PAPER_DIR / "_report.html"
-    pdf_path = REPORT_MD.with_suffix(".pdf")
+    pdf_path = report_md.with_suffix(".pdf")
     html_path.write_text(html, encoding="utf-8")
 
     chrome = find_chrome()

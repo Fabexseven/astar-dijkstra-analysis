@@ -26,7 +26,7 @@ python -m src.significance  # reads the CSV, writes results/significance.csv + p
 python paper/build_pdf.py   # re-embeds the 9 PNGs (base64) into paper_revisado.md and renders paper_revisado.pdf via headless Chrome
 ```
 
-There is no test suite or linter. `experiments.py` must run before `plots.py` and `significance.py` (both read the CSV it writes); `build_pdf.py` reads `graphs/` and requires Google Chrome or Chromium installed. It only builds `paper_revisado.pdf` — `paper_v1.pdf` is a frozen snapshot, not regenerated.
+There is no test suite or linter. `experiments.py` must run before `plots.py` and `significance.py` (both read the CSV it writes); `build_pdf.py` reads `graphs/` and requires Google Chrome or Chromium installed. It takes an optional target (`python paper/build_pdf.py paper_v1.md`) but only refreshes images for `paper_revisado.md`. **Do not regenerate `paper_v1.pdf`**: the Docs export left only ~170×128 thumbnails in `paper_v1.md`, so a rebuild degrades the figures — the committed PDF is the full-resolution Docs export.
 
 ## Architecture
 

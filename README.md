@@ -141,6 +141,12 @@ renderiza o PDF ao lado do `.md`. Requer o pacote `markdown` (já em
 `requirements.txt`) e uma instalação do **Google Chrome** ou **Chromium**, usado
 em modo _headless_ para a conversão HTML → PDF.
 
+> O script aceita um alvo opcional (`python paper/build_pdf.py paper_v1.md`),
+> mas o `paper_v1.pdf` versionado **não deve ser regenerado por ele**: a
+> exportação do Google Docs deixou apenas miniaturas de baixa resolução no
+> `paper_v1.md`, e o PDF commitado é a exportação em resolução plena do
+> próprio Docs.
+
 ### Versões editáveis do artigo (Google Docs)
 
 - **V1 (original):** <https://docs.google.com/document/d/1dzePI1h46R3mK-tsvD_SQ9BCKzldnLkK/edit>
