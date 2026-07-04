@@ -4,7 +4,7 @@
 > grids 2D com obstáculos aleatórios. Trabalho da disciplina de **Análise
 > de Algoritmos** — Unisinos.
 
-**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Estrutura](#estrutura-do-repositório)
+**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Significância](#como-rodar-o-teste-de-significância) · [Artigo em PDF](#como-gerar-o-artigo-em-pdf) · [Estrutura](#estrutura-do-repositório)
 
 ## Descrição
 
@@ -25,13 +25,16 @@ Resumo dos achados sobre as 540 execuções (detalhes nos gráficos em
   cresce com a densidade de obstáculos: a 10% o A\* visita ~87% dos nós do
   Dijkstra, a 20% cerca de 62%, e a 30% apenas ~20–39%.
 - **Em cenários grandes e com mais obstáculos, o A\* é claramente mais
-  rápido** — em 200×200 a 30% de obstáculos, o A\* roda em ~25% do tempo do
-  Dijkstra.
-- **Em cenários fáceis (10% de obstáculos), o A\* é ligeiramente mais
-  lento** em tempo de parede (~4–9%): o ganho em nós visitados não
-  compensa o overhead por nó do cálculo da heurística.
+  rápido** — em 200×200 a 30% de obstáculos, o A\* roda em ~27% do tempo do
+  Dijkstra (≈3,8× mais rápido).
+- **Em cenários fáceis (10% de obstáculos), o A\* é mais lento** em tempo
+  de parede (~10–15%): o ganho em nós visitados não compensa o overhead
+  por nó do cálculo da heurística.
 - **A vantagem do A\* escala com o problema**: tanto o tamanho do grid
   quanto a densidade de obstáculos amplificam o ganho relativo.
+- **Todas as diferenças de tempo são estatisticamente significativas**
+  (teste de Wilcoxon pareado por semente, p < 0,001 nas nove configurações —
+  ver `results/significance.csv`).
 
 ## Algoritmos implementados
 
@@ -111,6 +114,19 @@ Para cada taxa de obstáculo (10/20/30%) são gerados três PNGs em `graphs/`
 - `visited_nodes_*.png` — nós expandidos (vantagem do A\*).
 - `runtime_*.png` — tempo de execução.
 
+## Como rodar o teste de significância
+
+A partir da **raiz do projeto**, depois de gerar o CSV:
+
+```bash
+python -m src.significance
+```
+
+Pareia Dijkstra e A\* por `(tamanho, densidade, seed)` — mantendo apenas as
+sementes solúveis por ambos — e aplica um teste de **Wilcoxon de postos
+sinalizados** (com t pareado como verificação secundária) sobre `runtime_ms`
+em cada configuração. Imprime uma tabela e grava `results/significance.csv`.
+
 ## Como gerar o artigo em PDF
 
 A partir da **raiz do projeto**, depois de (re)gerar os gráficos:
@@ -146,10 +162,22 @@ astar-dijkstra-analysis/
 │   ├── path_cost_{10,20,30}.png
 │   ├── visited_nodes_{10,20,30}.png
 │   └── runtime_{10,20,30}.png
-├── paper/                  # o artigo (short-paper)
-│   ├── paper_revisado.md   # artigo em Markdown (figuras embutidas em base64)
-│   ├── paper_revisado.pdf  # artigo renderizado (gerado por build_pdf.py)
-│   ├── paper_revisado.diff # diff do texto vs. o rascunho original
+├── paper/                  # o artigo (short-paper) e os pareceres de revisão
+│   ├── paper_v1.md         # versão original do artigo (pré-revisão)
+│   ├── paper_v1.pdf        # versão original renderizada
+│   ├── paper_revisado.md   # artigo revisado em Markdown (figuras embutidas em base64)
+│   ├── paper_revisado.pdf  # artigo revisado renderizado (gerado por build_pdf.py)
+│   ├── review-*.md         # pareceres de conformidade gerados por LLMs
+│   │                       #   (sem sufixo: sobre a v1; sufixo -TR: sobre a versão revisada)
 │   └── build_pdf.py        # Markdown → PDF (via Chrome headless)
-└── docs/                   # material de referência (enunciado + artigos citados)
+├── prompts/                # prompt de avaliação usado para gerar os pareceres
+│   └── prompt-avaliacao-artigo-astar-dijkstra-v1.0.0.md
+└── docs/                   # material de referência
+    ├── TrabalhoI.pdf       # enunciado da disciplina
+    ├── A_Formal_Basis_for_the_Heuristic_Determination_of_Minimum_Cost_Paths.pdf
+    │                       #   Hart, Nilsson e Raphael (1968) — ref. [1]
+    ├── Comparative_Analysis_of_Dijkstra_and_A_Algorithms_.pdf
+    │                       #   Ardiansyah et al. (2025) — ref. [2]
+    └── A_Note_on_Two_Problems_in_Connexion_with_Graphs.pdf
+                            #   Dijkstra (1959) — ref. [3]
 ```

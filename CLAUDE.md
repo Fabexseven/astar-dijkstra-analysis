@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-An academic empirical study (Unisinos, Análise de Algoritmos) comparing **Dijkstra** (baseline) and **A\*** for shortest-path on 2D grids with random obstacles. Both algorithms are implemented from scratch — no external graph libraries. The deliverable is the experimental data (`results/results.csv`), the comparison plots (`graphs/`), and a report (`paper/`). Code comments and docstrings are written in **Portuguese**; keep that convention when editing.
+An academic empirical study (Unisinos, Análise de Algoritmos) comparing **Dijkstra** (baseline) and **A\*** for shortest-path on 2D grids with random obstacles. Both algorithms are implemented from scratch — no external graph libraries. The deliverable is the experimental data (`results/results.csv`), the comparison plots (`graphs/`), and a report (`paper/`). Code comments and docstrings are written in **Portuguese**; keep that convention when editing. The paper itself is also in Portuguese.
+
+Non-code folders:
+
+- `paper/` — the article in two versions: `paper_v1.{md,pdf}` (original) and `paper_revisado.{md,pdf}` (**the current deliverable** — edit this one). Also holds `review-*.md`, LLM-generated conformity reviews (no suffix = review of v1; `-TR` suffix = review of the revised version) — these are historical records, don't edit them.
+- `prompts/` — the versioned evaluation prompt used to generate those reviews.
+- `docs/` — reference PDFs: the assignment (`TrabalhoI.pdf`) and the three cited papers (Hart/Nilsson/Raphael 1968 = ref. [1], Ardiansyah et al. 2025 = ref. [2], Dijkstra 1959 = ref. [3]).
 
 ## Commands
 
@@ -17,9 +23,10 @@ pip install -r requirements.txt
 python -m src.experiments   # (re)generates results/results.csv — 540 rows + header
 python -m src.plots         # reads the CSV, writes 9 PNGs to graphs/
 python -m src.significance  # reads the CSV, writes results/significance.csv + prints a table
+python paper/build_pdf.py   # re-embeds the 9 PNGs (base64) into paper_revisado.md and renders paper_revisado.pdf via headless Chrome
 ```
 
-There is no test suite, linter, or build step. `experiments.py` must run before `plots.py` and `significance.py` (both read the CSV it writes).
+There is no test suite or linter. `experiments.py` must run before `plots.py` and `significance.py` (both read the CSV it writes); `build_pdf.py` reads `graphs/` and requires Google Chrome or Chromium installed. It only builds `paper_revisado.pdf` — `paper_v1.pdf` is a frozen snapshot, not regenerated.
 
 ## Architecture
 
