@@ -74,7 +74,7 @@ Total: 3 × 3 × 30 × 2 algoritmos = **540 execuções**.
 Requer **Python 3.9+**.
 
 ```bash
-git clone https://github.com/valdomirosouza/astar-dijkstra-analysis.git
+git clone https://github.com/Fabexseven/astar-dijkstra-analysis.git
 cd astar-dijkstra-analysis
 
 python -m venv .venv
