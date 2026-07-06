@@ -4,7 +4,7 @@
 > grids 2D com obstáculos aleatórios. Trabalho da disciplina de **Análise
 > de Algoritmos** — Unisinos.
 
-**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Estrutura](#estrutura-do-repositório)
+**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Significância](#como-rodar-o-teste-de-significância) · [Artigo em PDF](#como-gerar-o-artigo-em-pdf) · [Melhorias do artigo](#principais-melhorias-do-artigo-revisado) · [Estrutura](#estrutura-do-repositório)
 
 ## Descrição
 
@@ -25,13 +25,16 @@ Resumo dos achados sobre as 540 execuções (detalhes nos gráficos em
   cresce com a densidade de obstáculos: a 10% o A\* visita ~87% dos nós do
   Dijkstra, a 20% cerca de 62%, e a 30% apenas ~20–39%.
 - **Em cenários grandes e com mais obstáculos, o A\* é claramente mais
-  rápido** — em 200×200 a 30% de obstáculos, o A\* roda em ~25% do tempo do
-  Dijkstra.
-- **Em cenários fáceis (10% de obstáculos), o A\* é ligeiramente mais
-  lento** em tempo de parede (~4–9%): o ganho em nós visitados não
-  compensa o overhead por nó do cálculo da heurística.
+  rápido** — em 200×200 a 30% de obstáculos, o A\* roda em ~27% do tempo do
+  Dijkstra (≈3,8× mais rápido).
+- **Em cenários fáceis (10% de obstáculos), o A\* é mais lento** em tempo
+  de parede (~10–15%): o ganho em nós visitados não compensa o overhead
+  por nó do cálculo da heurística.
 - **A vantagem do A\* escala com o problema**: tanto o tamanho do grid
   quanto a densidade de obstáculos amplificam o ganho relativo.
+- **Todas as diferenças de tempo são estatisticamente significativas**
+  (teste de Wilcoxon pareado por semente, p < 0,001 nas nove configurações —
+  ver `results/significance.csv`).
 
 ## Algoritmos implementados
 
@@ -47,13 +50,13 @@ Ambos foram implementados do zero, sem usar bibliotecas externas de grafos.
 
 ## Cenário experimental
 
-| Parâmetro                 | Valores                                   |
-| ------------------------- | ----------------------------------------- |
-| Tamanhos do grid          | 50 × 50, 100 × 100, 200 × 200             |
-| Densidades de obstáculos  | 10%, 20%, 30%                             |
-| Repetições por cenário    | 30 (seeds `0..29`)                        |
-| Conectividade             | 4 vizinhos (cima, baixo, esquerda, direita) |
-| Início / objetivo         | `(0, 0)` → `(n-1, n-1)`                   |
+| Parâmetro                | Valores                                     |
+| ------------------------ | ------------------------------------------- |
+| Tamanhos do grid         | 50 × 50, 100 × 100, 200 × 200               |
+| Densidades de obstáculos | 10%, 20%, 30%                               |
+| Repetições por cenário   | 30 (seeds `0..29`)                          |
+| Conectividade            | 4 vizinhos (cima, baixo, esquerda, direita) |
+| Início / objetivo        | `(0, 0)` → `(n-1, n-1)`                     |
 
 Total: 3 × 3 × 30 × 2 algoritmos = **540 execuções**.
 
@@ -111,6 +114,86 @@ Para cada taxa de obstáculo (10/20/30%) são gerados três PNGs em `graphs/`
 - `visited_nodes_*.png` — nós expandidos (vantagem do A\*).
 - `runtime_*.png` — tempo de execução.
 
+## Como rodar o teste de significância
+
+A partir da **raiz do projeto**, depois de gerar o CSV:
+
+```bash
+python -m src.significance
+```
+
+Pareia Dijkstra e A\* por `(tamanho, densidade, seed)` — mantendo apenas as
+sementes solúveis por ambos — e aplica um teste de **Wilcoxon de postos
+sinalizados** (com t pareado como verificação secundária) sobre `runtime_ms`
+em cada configuração. Imprime uma tabela e grava `results/significance.csv`.
+
+## Como gerar o artigo em PDF
+
+A partir da **raiz do projeto**, depois de (re)gerar os gráficos:
+
+```bash
+python paper/build_pdf.py
+```
+
+O script reembute as nove figuras de `graphs/` no artigo em Markdown
+(`paper/paper_revisado.md`) — mantendo-o autocontido e coerente com os dados — e
+renderiza o PDF ao lado do `.md`. Requer o pacote `markdown` (já em
+`requirements.txt`) e uma instalação do **Google Chrome** ou **Chromium**, usado
+em modo _headless_ para a conversão HTML → PDF.
+
+> O script aceita um alvo opcional (`python paper/build_pdf.py paper_v1.md`),
+> mas o `paper_v1.pdf` versionado **não deve ser regenerado por ele**: a
+> exportação do Google Docs deixou apenas miniaturas de baixa resolução no
+> `paper_v1.md`, e o PDF commitado é a exportação em resolução plena do
+> próprio Docs.
+
+### Versões editáveis do artigo (Google Docs)
+
+- **V1 (original):** <https://docs.google.com/document/d/1dzePI1h46R3mK-tsvD_SQ9BCKzldnLkK/edit>
+- **V2 (revisada):** <https://docs.google.com/document/d/130aCZ-BUftNUSjeI1FAoZfQkoh_73VN1ngw9E4e_2_0/edit>
+
+Correspondem, respectivamente, a `paper/paper_v1.md` e
+`paper/paper_revisado.md` — os `.md` versionados aqui são exportações desses
+documentos.
+
+## Principais melhorias do artigo revisado
+
+Mudanças da V1 (`paper/paper_v1.md`) para a versão revisada
+(`paper/paper_revisado.md`), motivadas em grande parte pelos pareceres de
+conformidade em `paper/review-*.md`:
+
+- **Coautoria** — inclusão de Valdomiro Souza, adequando a composição do
+  grupo à exigência da disciplina.
+- **Análise de complexidade** — a Seção 2 passa a apresentar a complexidade
+  de pior caso O((V + E) log V) de ambos os algoritmos com heap binário,
+  situando a vantagem do A\* como de fator constante e de caso médio.
+- **Protocolo de medição de tempo mais robusto** — cada instância passou a
+  ser cronometrada **dez vezes**, reportando-se a **mediana** (a V1 usava uma
+  única medição). A Tabela 1 foi regenerada com os novos tempos.
+- **Teste de significância estatística** — teste de **Wilcoxon de postos
+  sinalizados**, pareado por semente, em cada uma das nove configurações
+  (p < 0,001 em todas), incorporado ao resumo, à Tabela 1 e à discussão. A
+  lentidão do A\* em mapas esparsos deixou de ser uma observação pontual e
+  passou a ser um resultado estatisticamente sustentado (10–15% mais lento).
+- **Contabilização explícita das amostras** — a Seção 3.2 detalha o efeito
+  de percolação: fração solúvel de 100% (10%), 86% (20%) e 47% (30% de
+  obstáculos), justificando a exclusão das 122 execuções sem caminho; a
+  legenda da Tabela 1 passou a indicar médias "sobre as sementes com caminho
+  viável" em vez de "30 sementes".
+- **Referência [2] completada e uso corrigido** — a citação de Ardiansyah
+  et al. ganhou autores, periódico (Bit-Tech), volume, páginas e DOI; e o
+  texto deixou de afirmar que o artigo observa o mesmo fenômeno, passando a
+  **contrastar** grids sintéticos com malhas viárias reais (a topologia do
+  grafo determina se a poda compensa o sobrecusto da heurística).
+- **Referência [3] adicionada** — citação completa de Dijkstra (1959).
+- **Conclusão calibrada** — sem generalizações indevidas: o ganho de uma
+  heurística admissível é certo em expansões, mas o ganho de tempo depende
+  da estrutura do problema; trabalhos futuros ampliados (consumo de memória
+  / tamanho da fronteira, grafos ponderados, vizinhança 8-conectada).
+- **Reprodutibilidade** — o link deste repositório (fork com os dados e
+  scripts atualizados) foi adicionado ao artigo; texto compactado para
+  respeitar o limite de 4 páginas.
+
 ## Estrutura do repositório
 
 ```
@@ -123,12 +206,31 @@ astar-dijkstra-analysis/
 │   ├── dijkstra.py         # Dijkstra (baseline)
 │   ├── astar.py            # A* com heurística de Manhattan
 │   ├── experiments.py      # bateria de experimentos → results/results.csv
-│   └── plots.py            # gera os PNGs de graphs/ a partir do CSV
+│   ├── plots.py            # gera os PNGs de graphs/ a partir do CSV
+│   └── significance.py     # teste de Wilcoxon pareado → results/significance.csv
 ├── results/
-│   └── results.csv         # saída bruta dos experimentos (1 linha por run)
+│   ├── results.csv         # saída bruta dos experimentos (1 linha por run)
+│   └── significance.csv    # significância dos tempos (A* vs Dijkstra) por cenário
 ├── graphs/                 # gráficos comparativos (PNG, 300 dpi)
 │   ├── path_cost_{10,20,30}.png
 │   ├── visited_nodes_{10,20,30}.png
 │   └── runtime_{10,20,30}.png
-└── paper/                  # relatório do trabalho
+├── paper/                  # o artigo (short-paper) e os pareceres de revisão
+│   ├── paper_v1.md         # versão original do artigo (pré-revisão)
+│   ├── paper_v1.pdf        # versão original renderizada
+│   ├── paper_revisado.md   # artigo revisado em Markdown (figuras embutidas em base64)
+│   ├── paper_revisado.pdf  # artigo revisado renderizado (gerado por build_pdf.py)
+│   ├── review-*.md         # pareceres de conformidade gerados por LLMs
+│   │                       #   (sem sufixo: sobre a v1; sufixo -TR: sobre a versão revisada)
+│   └── build_pdf.py        # Markdown → PDF (via Chrome headless)
+├── prompts/                # prompt de avaliação usado para gerar os pareceres
+│   └── prompt-avaliacao-artigo-astar-dijkstra-v1.0.0.md
+└── docs/                   # material de referência
+    ├── TrabalhoI.pdf       # enunciado da disciplina
+    ├── A_Formal_Basis_for_the_Heuristic_Determination_of_Minimum_Cost_Paths.pdf
+    │                       #   Hart, Nilsson e Raphael (1968) — ref. [1]
+    ├── Comparative_Analysis_of_Dijkstra_and_A_Algorithms_.pdf
+    │                       #   Ardiansyah et al. (2025) — ref. [2]
+    └── A_Note_on_Two_Problems_in_Connexion_with_Graphs.pdf
+                            #   Dijkstra (1959) — ref. [3]
 ```
