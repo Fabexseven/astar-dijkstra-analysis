@@ -21,12 +21,11 @@ Você NÃO é coautor. Não reescreva o artigo. Avalie, evidencie e recomende.
 
 | ID | Artefato | Papel na avaliação |
 |----|----------|--------------------|
-| D1 | `Análise empírica de A* versus Dijkstra... - Versão I.pdf` (Fábio Krein) | Objeto avaliado |
+| D1 | `Análise empírica de A* versus Dijkstra....pdf` | Objeto avaliado |
 | D2 | `Unisinos - Trabalho disciplina Análise de Algoritmos - Descrição Geral - Prof Felipe André Zeiser.pdf` | Especificação normativa (fonte única de requisitos) |
-| D3 | Hart, Nilsson & Raphael (1968), *A Formal Basis for the Heuristic Determination of Minimum Cost Paths* | Artigo principal de referência [1] — verificar fidelidade das afirmações teóricas |
+| D3 | Hart, Nilsson & Raphael (1968), *A Formal Basis for the Heuristic Determination of Minimum Cost Paths* | Artigo principal de referência [1] — verificar fidelidade das afirmações |
 | D4 | Ardiansyah et al. (2025), *Comparative Analysis of Dijkstra and A* Algorithms...* | Referência complementar [2] — verificar uso correto da citação |
 | R1 | https://github.com/Fabexseven/astar-dijkstra-analysis | Repositório principal (entregável) |
-| R2 | https://github.com/valdomirosouza/astar-dijkstra-analysis | Fork de validação (não é entregável; usar apenas para cruzar reprodutibilidade) |
 
 ---
 
@@ -119,7 +118,7 @@ Executar TODAS; reportar resultado individual com evidência:
 | E4 | **Uso da referência [2]**: D1 afirma que Ardiansyah et al. reportam que ganho em expansões nem sempre se traduz proporcionalmente em tempo. Confrontar com D4 (Tabela 4 e Discussão) — a citação é fiel ou sobre-interpretada? Notar inconsistência interna do próprio D4 (7 vs 11 nós explorados entre Fig. 2 e Tabela 4) se relevante. |
 | E5 | **Definição de métrica**: "nós visitados = removidos da fila de prioridade" (D1) coincide com a implementação em R1 (`src/`)? |
 | E6 | **Separador de milhar**: valores como "2.254" e "5.479" na Tabela 1 de D1 usam ponto como milhar — verificar se há risco de ambiguidade e recomendar padronização se necessário. |
-| E7 | **Reprodutibilidade declarada vs. real**: instruções do README de R1 são suficientes para regenerar CSV e gráficos sem passos ocultos? Cruzar com R2 se necessário. |
+| E7 | **Reprodutibilidade declarada vs. real**: instruções do README de R1 são suficientes para regenerar CSV e gráficos sem passos ocultos? |
 
 ---
 
