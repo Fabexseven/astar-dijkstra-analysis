@@ -4,7 +4,7 @@
 > grids 2D com obstáculos aleatórios. Trabalho da disciplina de **Análise
 > de Algoritmos** — Unisinos.
 
-**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Significância](#como-rodar-o-teste-de-significância) · [Artigo em PDF](#como-gerar-o-artigo-em-pdf) · [Melhorias do artigo](#principais-melhorias-do-artigo-revisado) · [Estrutura](#estrutura-do-repositório)
+**Sumário:** [Descrição](#descrição) · [Principais resultados](#principais-resultados) · [Algoritmos](#algoritmos-implementados) · [Cenário experimental](#cenário-experimental) · [Métricas](#métricas-avaliadas) · [Instalação](#instalação) · [Rodar experimentos](#como-rodar-os-experimentos) · [Gerar gráficos](#como-gerar-os-gráficos) · [Significância](#como-rodar-o-teste-de-significância) · [Estrutura](#estrutura-do-repositório)
 
 ## Descrição
 
