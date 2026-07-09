@@ -153,7 +153,7 @@ astar-dijkstra-analysis/
 │   ├── visited_nodes_{10,20,30}.png
 │   └── runtime_{10,20,30}.png
 ├── paper/                  # o artigo (short-paper) e os pareceres de revisão
-│   ├── Análise empírica de A∗ versus Dijkstra para menor...pdf
+│   ├── Análise empírica de A∗ versus Dijkstra para menor caminho em grids 2D com obstáculos.pdf
 |                           # versão em PDF do artigo
 ├── prompts/                # prompt de avaliação usado para gerar os pareceres
 │   └── prompt-avaliacao-artigo-astar-dijkstra-v1.0.0.md
