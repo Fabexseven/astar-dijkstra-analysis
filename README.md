@@ -153,13 +153,8 @@ astar-dijkstra-analysis/
 │   ├── visited_nodes_{10,20,30}.png
 │   └── runtime_{10,20,30}.png
 ├── paper/                  # o artigo (short-paper) e os pareceres de revisão
-│   ├── paper_v1.md         # versão original do artigo (pré-revisão)
-│   ├── paper_v1.pdf        # versão original renderizada
-│   ├── paper_revisado.md   # artigo revisado em Markdown (figuras embutidas em base64)
-│   ├── paper_revisado.pdf  # artigo revisado renderizado (gerado por build_pdf.py)
-│   ├── review-*.md         # pareceres de conformidade gerados por LLMs
-│   │                       #   (sem sufixo: sobre a v1; sufixo -TR: sobre a versão revisada)
-│   └── build_pdf.py        # Markdown → PDF (via Chrome headless)
+│   ├── Análise empírica de A∗ versus Dijkstra para menor...pdf
+|                           # versão em PDF do artigo
 ├── prompts/                # prompt de avaliação usado para gerar os pareceres
 │   └── prompt-avaliacao-artigo-astar-dijkstra-v1.0.0.md
 └── docs/                   # material de referência
