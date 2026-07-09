@@ -4,7 +4,6 @@ __pycache__/
 .DS_Store
 .venv/
 venv/
+.env
 .idea/
-.serena/
 .vscode/
-CLAUDE.md
